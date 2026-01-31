@@ -82,7 +82,7 @@ body {
 }
 
 /* Button style */
-.btn {
+.btn, .undo-btn {
   padding: 12px 32px;
   font-size: 1rem;
   font-weight: bold;
@@ -131,6 +131,12 @@ body {
 .player-o {
   color: #eef5f7;   /* aqua/cyan */
   text-shadow: 0 0 10px rgba(77, 210, 255, 0.8);
+}
+
+.undo-btn.disabled{
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 /* ------------------- Animations ------------------- */

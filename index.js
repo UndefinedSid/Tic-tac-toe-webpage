@@ -1,9 +1,11 @@
 const boxes = document.querySelectorAll(".box");
 const gameInfo = document.querySelector(".game-info");
 const newGameBtn = document.querySelector(".btn");
+const undoBtn = document.querySelector(".undo-btn"); 
 
 let currentPlayer;
 let gameGrid;
+let moveHistory=[];
 
 const winningPositions = [
     [0,1,2],
@@ -19,6 +21,7 @@ const winningPositions = [
 function initGame(){
     currentPlayer = "X";
     gameGrid = ["","","","","","","","",""];
+    moveHistory=[];
     newGameBtn.classList.remove("active");
     gameInfo.innerText = `Current Player - ${currentPlayer}`;
 
@@ -59,6 +62,7 @@ function checkGameOver() {
     if(winner !== ""){
         gameInfo.innerText = `Winner - ${winner}`;
         newGameBtn.classList.add("active");
+        undoBtn.classList.add("disabled")
         return;
     }
 
@@ -70,8 +74,9 @@ function checkGameOver() {
 
     if(fillCount === 9){
         gameInfo.innerText = "Game Tied!";
-            boxes.forEach(box => box.classList.add("tie"));
+        boxes.forEach(box => box.classList.add("tie"));
         newGameBtn.classList.add("active");
+        undoBtn.classList.add("disabled")
 
     }
 
@@ -88,9 +93,23 @@ function handleClick(index) {
     }
 
         gameGrid[index] = currentPlayer;
+        moveHistory.push(index);
         boxes[index].style.pointerEvents = "none"; 
         swapTurn();
         checkGameOver();
+    }
+}
+
+function undoMove(){
+    if(moveHistory.length > 0){
+        let lastMove=moveHistory.pop()
+        gameGrid[lastMove]=""
+        boxes[lastMove].innerText=""
+        boxes[lastMove].classList.remove("player-x", "player-O","win","tie")
+        boxes[lastMove].style.pointerEvents="all"
+
+        swapTurn()
+        gameInfo.innerText=`Current Player - ${currentPlayer}`
     }
 }
 
@@ -101,3 +120,4 @@ boxes.forEach((box,index) => {
 });
 
 newGameBtn.addEventListener("click", initGame);
+undoBtn.addEventListener("click",undoMove)
